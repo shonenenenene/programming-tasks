@@ -1,16 +1,15 @@
 function showMeTheTable(num) {
     if (typeof num !== 'number') {
         return console.log('Будте добры, введите число')
-    } else if (num > 9) {
+    } else if (num > 99) {
         return console.log(
-            'Прошу меня извинить, но я принимаю только числа меньше десяти'
+            'Прошу меня извинить, но я принимаю только числа меньше 100'
         )
     }
 
     const headerMultipliers = Array.from({ length: num }, (e, i) => i + 1) // Создаем массив множителей в заголовке
 
     let сolumnMultiplier = headerMultipliers[0] // Сюда будут записываться значения множителей левой колонки
-    const dashedLine = ['---'.repeat(num)]
     // Создание массива, включающего в себя множитель из левой  колонки и произведения множителей в текущей линии
     function tableProductsLineGenerator() {
         const arr = Array.from(
@@ -24,35 +23,68 @@ function showMeTheTable(num) {
     // Создание массива со всеми значениями будущей таблицы
     const rawArr = Array.from({ length: num + 2 }, (e, i) =>
         i === 0
-            ? (e = headerMultipliers)
+            ? (e = ['  '].concat(headerMultipliers))
             : i === 1
-            ? (e = dashedLine)
+            ? (e = ['---'])
             : tableProductsLineGenerator()
     )
 
-    let indexOfAlign = // Фиксируем индекс элементов, начиная с которых будет происходить выравнивание
+    let indexOfTwoDigit = // Фиксируем индекс элементов, начиная с которых будет происходить выравнивание
         rawArr[rawArr.length - 1] // Определяем индекс по будущей последней строке таблицы
             .slice(1)
             .findIndex((e) => String(e).length === 2) + 1
+    if (num < 4) indexOfTwoDigit = num + 1
+    let indexOfThreeDigit =
+        rawArr[rawArr.length - 1]
+            .slice(1)
+            .findIndex((e) => String(e).length === 3) + 1
+    if (num < 10) indexOfThreeDigit = num + 1
+    let indexOfFourDigit =
+        rawArr[rawArr.length - 1]
+            .slice(1)
+            .findIndex((e) => String(e).length === 4) + 1
+    if (num < 32) indexOfFourDigit = num + 1
     // Выравниваем все элементы путем внедрения пробелов и соединяем
     const alignedArr = rawArr.map((e, i) => {
-        if (i < 1) {
-            return ['  ']
-                .concat(e)
-                .map((element, index) => {
-                    if (index >= indexOfAlign && String(element).length === 1) {
-                        return ' ' + element
-                    } else return element
-                })
-                .join(' ')
-        } else if (i === 1) {
-            return e
+        if (i === 1) {
+            return '-'.repeat(rawArr[rawArr.length - 1].toString().length)
         } else {
             let alignedLine = e.map((element, index) => {
-                if (index >= indexOfAlign && String(element).length === 1) {
+                if (num > 9 && index === 0 && String(element).length === 2) {
+                    return ' ' + element
+                } else if (
+                    num > 9 &&
+                    index === 0 &&
+                    String(element).length === 3
+                ) {
+                    return element
+                }
+
+                if (index >= indexOfFourDigit && String(element).length === 2) {
+                    return '  ' + element
+                } else if (
+                    index >= indexOfFourDigit &&
+                    String(element).length === 3
+                ) {
+                    return ' ' + element
+                } else if (
+                    index >= indexOfThreeDigit &&
+                    String(element).length === 1
+                ) {
+                    return '  ' + element
+                } else if (
+                    index >= indexOfTwoDigit &&
+                    String(element).length === 1
+                ) {
+                    return ' ' + element
+                } else if (
+                    index >= indexOfThreeDigit &&
+                    String(element).length === 2
+                ) {
                     return ' ' + element
                 } else return element
             })
+
             return alignedLine.join(' ')
         }
     })
@@ -62,4 +94,4 @@ function showMeTheTable(num) {
     console.log(doneTable)
 }
 
-showMeTheTable(9)
+showMeTheTable(35)
