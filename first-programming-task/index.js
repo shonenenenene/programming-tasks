@@ -1,9 +1,10 @@
 function showMeTheTable(num) {
     if (typeof num !== 'number') {
         return console.log('Будте добры, введите число')
-    } else if (num > 99) {
+    }
+    if ( num > 99 || num < 1 ) {
         return console.log(
-            'Прошу меня извинить, но я принимаю только числа меньше 100'
+            'Прошу меня извинить, но я принимаю только числа в диапазоне от 1 до 99 включительно'
         )
     }
 
